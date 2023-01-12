@@ -7,10 +7,13 @@
     <title>ToDo List</title>
   </head>
   <body>
+    <!-- Since this is HTML and we want to add logic inside the ejs file we have to make sure that the program knows this
+    so we add ( below in purple symbol) and encase the logic, make sure to add a space bar before or after depending if you have it at the start or end of the line. -->
+    <% if (kindOfDay === "Thursday"){ %>
+      <h1 style="color: purple"><%= kindOfDay %> ToDo List</h1>
+    <% } else { %>
+      <h1 style="color: blue"><%= kindOfDay %>ToDo List</h1>
+    <% } %>
     <!-- Marker - Whats in purple is replace the value in the variable -->
-    <h1>Its a <%= kindOfDay %>!</h1>
-    <p>
-      Why are you not working!
-      </p>
   </body>
 </html>

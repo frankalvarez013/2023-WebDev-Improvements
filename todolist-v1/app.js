@@ -4,12 +4,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
+
+let items = ["Buy Food", "Cook Food", "Eat Food"];
+
 app.set('view engine', 'ejs');
 
+app.use(bodyParser.urlencoded({extendend:true}));
+
 app.get("/", function(req, res) {
-  var today = new Date();
-  var currentDay = today.getDay();
-  var date = "";
+  let today = new Date();
+  let currentDay = today.getDay();
+  let date = "";
   // if(currentDay === 6 || currentDay === 0){
   //   res.send("Yay it's the weekend!");
   // } else {
@@ -29,35 +34,21 @@ app.get("/", function(req, res) {
   // }
 
   //Using EJS for efficiently
-  switch (currentDay) {
-    case 0:
-      day = "Sunday";
-      break;
-    case 1:
-      day = "Monday";
-      break;
-    case 2:
-      day = "Tuesday";
-      break;
-    case 3:
-      day = "Wednesday";
-      break;
-    case 4:
-      day = "Thursday";
-      break;
-    case 5:
-      day = "Friday";
-      break;
-    case 6:
-      day = "Saturday";
-      break;
-    default:
-      console.log("Error: current day is equal to: " + day);
-  }
+  let options = {weekday:"long",day:"numeric",month:"long"};
+  let day = today.toLocaleDateString("en-US", options);
 
   //kindOfDay is the variable from the list.ejs file and we are simply passing over the day variable to the html file and manipulate it. EJS is used to
   //not create multiple html files just for small changes in the html.
-  res.render("list", {kindOfDay: day});
+  res.render("list2", {kindOfDay: day, newListItems: items});
+});
+
+app.post("/", function(req,res){
+  //In order to access this item we need app.use(bodyParser)... to be able to get the vale we need from that text input.
+  let item = req.body.newItem;
+
+  items.push(item);
+  res.redirect("/");
+  //redirect to the app.get("/") because the home res.render needs the item value
 });
 
 app.listen(3000, function() {
