@@ -1,12 +1,13 @@
 <%- include ("partials/header") -%>
-
-<form class="item" action="/" method="post">
-  <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-  <button type="submit" name="list" value="<%= listTitle %>">+</button>
-</form>
-
-<form type="text" name="composey" placeholder="" method="post">
-
+<h1>Compose</h1>
+<form action="/compose" method="post">
+  <div class="form-group">
+    <label>Title</label>
+    <input class="form-control" type="text" name="postTitle" autocomplete="off">
+    <label>Post</label>
+    <textarea class="form-control" name="postBody" rows="5" cols="40"></textarea>
+  </div>
+  <button class="bdn btn-primary" type="submit" name="list"> Publish</button>
 </form>
 
 <%- include ("partials/footer") -%>
