@@ -1,4 +1,7 @@
 <%- include ("partials/header") -%>
 <h1>Home</h1>
 <p><%= description %></p>
+<% Cardss.forEach(function(card){ %>
+  <% console.log(card.title); %>
+<% }); %>
 <%- include ("partials/footer") -%>
