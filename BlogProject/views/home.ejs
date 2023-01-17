@@ -3,6 +3,6 @@
 <p><%= description %></p>
 <% posts.forEach(function(card){ %>
   <h1><%= card.title %></h1>
-  <p><%= card.content %></p>
+  <p><%= card.content.substring(0,100)+ "..." %><a href="posts/<%=card.title%>">Read More</a></p>
 <% }); %>
 <%- include ("partials/footer") -%>
