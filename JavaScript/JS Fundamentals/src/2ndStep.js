@@ -377,8 +377,29 @@
 //We know that when we use "new" keyword, we actually auto-create a new object which will be referenced by the this. found in the function userCreator()
 //When we create this object, we want to make sure that this newly created object will link to the function prototype so WE KNOW THAT THE OBJECT...
 //...HAS ITS OWN __PROTO__ which will then link to the prototype object found in userCreator().
-//STEP by STEP Instructions of what happens with new.
-//1. create this: {  }
-//2.set __proto__ : userCreator.prototype
-//3.this: { pass data }
-//4.Return this
+//STEP by STEP Layman Instructions of what happens with 'new' keyword.
+//1. initialize this: {  } inside function userCreator
+//2.set __proto__ : userCreator.prototype <-just comes from the new keyword
+//3.this: { pass data } <- pass the parameters inside object .this
+//4.Return .this
+
+//````````````````````````````````````````````````
+//class keyword
+//````````````````````````````````````````````````
+//
+//Solution 4: The class 'syntactic sugar'
+//We're writing our shared methods separately from our object 'constructor' as we have function linked to the 
+//Other languages let us do this all on one place which is CLASS
+// class UserCreator {
+//     constructor(name,score){
+//         this.name = name;
+//         this.score = score;
+//     }
+//     increment (){this.score++;}
+//     login () {console.log("login");}
+// }
+// const user1 = new UserCreator("Eva",9);
+// user1.increment();
+//Explanation
+//Constructor becomes the default function from the class userCreator
+//The prototype are just the functioned bundled under the class.
