@@ -74,10 +74,10 @@ const fact = {
 // console.log(feeling)
 
 //VAR**
-//var newVariable = "hello" <- value = hello
-//newVariable = "goodbye" <-value = goodbye
-//function messWith(){newVariable="messed"} <- value = messed
-// { var newVariable = "more messed"; } <- value = more messed!!
+//var newVariable = "hello" // value = hello
+//newVariable = "goodbye" // value = goodbye
+//function messWith(){newVariable="messed"} // value = messed
+// { var newVariable = "more messed"; } // value = more messed!!
 
 //LET
 // let newVar = "goodbye" <-value = goodbye
