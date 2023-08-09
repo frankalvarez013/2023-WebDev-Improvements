@@ -208,3 +208,198 @@
 //          (3 > 2) > 1;
 //          (true) > 1;
 //          1 > 1;      //false!!!
+
+//```````````````````````````````````````````````````````````````````
+// Equality
+//```````````````````````````````````````````````````````````````````
+//  Double & Triple Equals
+
+//      1.If type(x) same as type(y) then return x === y
+//      Type and value are not indicators of distinguishable values for == and ===
+//      Example
+//          var studentName1 = "Frank"
+//          var studentName2 = "${studentName1}"
+//          console.log(studentName1 == studentName2)   //  true
+//          console.log(studentName1 === studentName2)  //  true
+//          When types match - do the triple equals
+
+//      strict equality vs loose equality means whether or not we are allowing coercion to be.
+
+//  Coercive Equality
+
+//      2. if x is null and y is undefined vice versa return true
+//      == allows coercion when types are different
+//      === disallow coercion when types are the same (compares two objects and it wont run unless they point or reference to the same object)
+
+//      Example
+//          var workshop1 = { topic: null};
+//          var workshop2 = {};
+
+//          if(
+//              workshop1.topic == null && workshop2.topic == null
+//          ) {
+//              // ..
+//          }
+
+
+//  Double Equals Algorithm
+
+//      3. IF Type(x) is Number and Type(y) is String compare x == ! ToNumber(y)
+//      After the first rules is applied and second rule is applied (type == then ===) then check null THEN
+//      If type is Number and other type is string - return the result of toNumber() from both vars and compare
+//      Example
+//          var workshopEnrollment = 16;
+//          var workshopEnrollment2 = workshop2Elem.value;
+//          if (Number(workshopEnrollment1) === Number(workshopEnrollment2)){
+//
+//          }
+//          if(workshopEnrollment1 == workshopEnrollment2){
+//
+//          }
+//
+//      4. if type(x) are either string, number, symbol and type(y) is object compare x == ToPrimitive(y)
+//      
+//      Example
+            // var workshop1Count = 42;
+            // var workshop2Count = [42];
+
+            // if(workshop1Count == workshop2Count){
+            //     //true
+            // }
+//      This shouldn't work BUT IT DOES. because of the array stringification and only accidentally working because it only stringifies the 42 and doesn't have additional numbers cuz then it
+//      would be like 42,1 if it had another value
+//      Explanation ->Primitive() (42 == "42") ->Primitive() (42 === 42) goes into triple equals cuz of Rule 1.
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!
+//If the types are the same: ===
+//If null or undefined: equal
+//If non-primitives: ToPrimitive
+//Prefer: ToNumber
+
+//The Corner Cases:
+//      Example
+//          [] == ![]; //This says true this is a false constract never compare the value of the negation of itself
+//              [] == false -> "" == false -> 0 == false -> 0 === 0 -> true!
+//          [] !- []
+//              workshop != workshop2 -> !(workshop == workshop2) -> !(false) ->  true 
+
+//AVOID using ==
+// 1. == when either side can become 0 or "" (or even " ")
+// 2. == with non-primitives
+// 3. == true or == false: allow ToBoolean or use ===
+
+//The case for preferring ==
+// == is NOT about comparisons with unkown types, DONT USE IT WHEN YOU DON"T KNOW THE TYPES
+// == is about comparisons with known type(s), optionally where conversions are helpful.
+// if both types are the same, == is identical to ===
+// Using === would be unnecessary so prefer the shorter ==
+// if the types are different, the equivalent of == would be two so don't do it urself since JS will be able to do it.
+// IF YOU DON"T KNOW THE TYPES USE ===
+
+
+//```````````````````````````````````````````````
+//TypeScript
+//```````````````````````````````````````````````
+//
+// TypeScript & FLow
+//  Benefits
+//      1. Catch type-related mistackes
+//      2. Communicate type intent
+//      3. Provide IDE feedback
+//
+//  Caveats
+//      1. Inferencing is best-guess, not a guarantee. We are guessing something at compile time, we are not sure at run time
+//      2. Annotations are optionals, Devs might not put into it, it will give an any time so you have to be very aware of whats going on.
+//      3. Any part of the application that isn't typed introduces uncertainty
+//  Examples
+        // var teacher: string = "Kyle";
+        // var teacher = "Kyle";
+        // teacher = { name: "Kyle" }; //Error: can't assign object to string
+
+        //  Custom Typing (student)
+        //  type student = {name: string};
+        //  function getName(studentRec: student): string {
+        //     return studentRec.name;
+        //  }
+        // var firstStudent: student = {name: "Frank"};
+        // var firstStudentName: string = getName(firstStudent);
+//
+//  Validating Operand Types
+        //  var studentName: string = "Frank";
+        //  var studentCount: number = 16 - studentName; //Error: can't subtract string;
+
+//  Pros:
+//      They make types more obvious in code
+//      Familiarity: they look like other language's type systems
+//      Extremely popular these days
+//      They're very sophisticated and good at what they do
+//  Cons:
+//      They use "non-JS-standard" syntax (or code comments)
+//      They require* a build process, which raises the barrier to entry
+//      Their sophistication can be intimidating to those without prior formal types experience
+//      They focus more on "static types" (Containers that they must always have one type which isn't what JS is about) than value types.
+
+//  Javascript has adynamic type system which uses various forms of coercion for value type conversion including equality comparisons
+
+//````````````````````````````````````````````````````````````
+//Scope
+//````````````````````````````````````````````````````````````
+// JS is a Compiled Language or parsed or a processing.
+// We discover the source position at complie time but we don't use that information until run time
+// There is a processing and execution of a JS engine aligning yourself to two different stages.
+// One stage where we figure out all the scopes, all the buckest, all the marbles,
+// Second stage where we use all that information to execute the code.
+
+//"use strict";
+//ReferenceErrors will show up when using Strict Mode. Its different from valueError because reference is asking for a source that isn't there.
+//Undefined means its declared but never given a value
+//Undeclared means its not declared in any scope we have access to.
+
+//`````````````````````````````````````````````````````````````
+//Scope & Function Expressions
+//`````````````````````````````````````````````````````````````
+//
+// function teacher () {/* */}
+// var myTeacher = function anotherTeacher(){console.log(anotherTeacher)}
+//Teacher is in global scope source
+//myTeacher is in golbal scope source
+//function anotherTeacher is in myTeacher variable source
+
+//Advanced Scope
+// var teacher = "Kyle";
+// var teacher = "Suzy";
+//They both use the same name in the same scope. Use a function to be able to remove name collision.
+//Example -
+// function anotherTeacher(){console.log("Teacher")};
+// (anotherTeacher) (); //Gets the value inside parantheses and then the second set of parenthesis will be able to call it.
+
+// why don't we just add the parantheses around the function declaration and do the same thing we did on line 374 so that we can call it on declaration? Yes you can!!
+
+// (function anotherTeacher(){console.log("Teacher")})(); This is called IIFE (immediately-invoked-function-expression)
+// HOWEVER THIS IS NOT A FUNCTION DECLARATION BECAUSE of the () is the first thing it reads
+//
+// function lookupRecord(searchStr){
+//     try{
+//         var id = getRecord( searchStr );
+//     }
+//     catch (err){
+//         var id = -1
+//     }
+//     return id;
+// }
+//function above shows how var can be used. You can also redeclare the variable if you want to specify to the reader where you want to use in a scope (so its more behavioural)
+
+// function formatStr(str){
+//     {
+//         let prefix, rest;
+//         prefix = str.slice(0,3);
+//         rest = str.slice( 3 );
+//         str = prefix.toUpperCase() + rest;
+//     }
+//     if (/^FOO:/.test(str)){
+//         return str;
+//     }
+//     return str.slice( 4 );
+// }
+// function above shows how if you have a variable that only exists for a couple of lines to create a scope. In this case we create prefix and rest to just modify variable str.
+//  this means that they only exist and only used within the limits of the scope and don't exist anywhere else within the function.
