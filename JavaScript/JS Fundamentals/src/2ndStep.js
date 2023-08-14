@@ -36,13 +36,12 @@
 //## myNewFunction();
 //_________________________________
 
-// Explanation: So when we call myNewFunction it will get the results of outers function and only remember the callback which was returned.
-//              When we try to call myNewFunction it will find the reference of incrementCounter however, since we dont remember  outer function 
-//              that we threw out, the counter variable saved in that function also gets lost and since there is 
-//              no global variable...what do we do?
+// Explanation: So when we declare myNewFunction it will get the results of outer function and only remember the callback(the incrementCounter()) which was returned.
+//              When we try to call myNewFunction it will find the reference of incrementCounter however, since we dont remember outer function 
+//              that we threw out, the counter variable saved in that function also GETS SAVED.
 
-// Solution: TURNS OUT It took with it all the surrounding data in the outer() and brought all of the data on the back of the function myNewFunction (like a backpack)
-// the reference to the counter will be global when calling myNewFunction and it will 
+// Solution: TURNS OUT CLOSURE AS IN THE FUNCTION INCREMENT COUNTER took with it all the surrounding data in the outer() and brought all of the data on the back of the
+//  function myNewFunction (like a backpack). the reference to the counter will be global when calling myNewFunction and it will 
 // function closure/returning function is not JUST A LABEL but it also is able to store data
 // BUT WHERE DOES THE DATA GET SAVED???
 // If we console.log increment incrementCounter() from inside the outer() we will notice that it has a hidden property that links 
@@ -182,7 +181,7 @@
 // when the fetch feature gets called and COMPLETED and returns the info it got from fetch, it will store on the futureData.value and then CALL the onfufilled FUNCTIOn automatically.
 // Its input will then be the value the promise object just obtained.
 
-// Rules by Witch our promise-deferred functionality runs by
+// Rules by Which our promise-deferred functionality runs by
 
 //`````````````````````````````````````````````````````````
 // Any code we return from the fetch must be saved on promise object, adding useing .htne to the hidden proproety onfulfilment
@@ -221,26 +220,26 @@
 // Inefficent:
 
 //_________________________________
-//## function userCreator(name,score){
-//##     const newUser = {};
-//##    newUser.name = name;
-//##     newUser.score = score;
-//##     newUser.increment = function() {
-//##         newUser.score++;
-//##     };
-//##     return newUser;
-//## };
+// function userCreator(name,score){
+//    const newUser = {};
+//    newUser.name = name;
+//    newUser.score = score;
+//    newUser.increment = function() {
+//        newUser.score++;
+//    };
+//    return newUser;
+// };
 
-//## const user1 = userCreator("Will",3);
-//## const user2 = userCreator("Tim",5);
-//## user1.increment;
+// const user1 = userCreator("Will",3);
+// const user2 = userCreator("Tim",5);
+// user1.increment;
 //_________________________________
-
 // We can generate objects using a function however we have to understand that this method is not efficient nor practical because each object...
-//...will have the same function written for all objects when really we only need 1 over the whole application and if we wanted to add another function...
+//...will have the same function copied over for all objects when really we only need 1 over the whole application and if we wanted to add another function...
 //...we would have to add it to every single object that pertains to that type.
-// Anyways back the example, when we store the userCreator into the new object, we will notice how the function increment will have a BACKPACK or CLOSURE
-// because the function is pointing to a "newUser" and in this case global memory doesn't have that variable, so the closure will actually get the username label and refer to itself!
+// Anyways back the example, when we store the "userCreator return value" into the new variable, we will notice how the function increment will have a BACKPACK or CLOSURE
+// because the function increment originally is pointing to a "newUser" and in this case global memory doesn't have that variable, so the closure will actually get the user object that was
+// created inside userCreator() and in this case its referring to the new variable(user1) we created!
  
 // The solution to this problem is to find the function not into the objects, but rather a link to the function store object to access that one function. you do this by doing to 
 // Object.create() function
@@ -269,15 +268,15 @@
 //_________________________________
 
 // Explanation
-// When we use Object.create, the object will actually have a hidden property called __proto__ which will actually allow us to link to the function in the parameter of Object.create in the ex
+// When we use Object.create, the object (user1) will actually have a hidden property called __proto__ which LINKS to the function found in the userFUnctionStore().
 // Which should contain the function increment and login.
-// Cool thing about js is that when a function is called from an object that function will have an implicit parameter which is called this which will contain the object it came from
+// Cool thing about js is that when a function is called from an object that function will have an implicit parameter (this) which is called this which will contain the object it came from
 // Object prototype are going to be available to all objects. Each Objet will link to the Object Prototype in which one of its functions is hasOwnProperty.
 // So it goes from user1.hasOwnProperty('score') to user1 in global memory, then it moves to userFunctionstore, then it moves to Object prototype to access that method.
 // ````````````````````````````````````````````````````````````````````````````````````
-// .this Ecosystem
-// Imagine we replace userFunctionStore with this:
 
+
+// Imagine we replace userFunctionStore with this:
 //_________________________________
 //## const userFunctionStore = {
 //##   increment: function(){
@@ -287,9 +286,9 @@
 //## };
 //_________________________________
 
-// When we run userFunctionStore, the increment function will have this:user1 and add1() and when we run add1() the this: property will be empty and it will be undefined.
+// When we run userFunctionStore, the increment function will contain:this:user1 and add1(), and when we run add1() its this: property will be empty and it will be undefined because it refers to global.
 // So in this case add1() will not be able to find this.
-// So in order for us to call add1(this) with the .this it will need to be add1.call()
+// So in order for us to call add1(this) with the .this (the user1) it will need to be add1.call()
 // Updated
 // Imagine we replace userFunctionStore with this:
 
@@ -349,12 +348,12 @@
 
 //_________________________________
 //## function add(num){return num*2}
-//## function.stored = 5
+//## add.stored = 5
 //## add(5) //10
 //## add.stored //5
 //_________________________________
 
-// as long as we don't use the paranthes, it will act as an object.
+// as long as we don't use the paranthesis, it will act as an object.
 // all functions have prototype (the name of this prototype is just 'prototype') but the default is an empty function.
 // So in the function userCreator:
 // We added a new .prototype object into userCreator and then add another object .increment that will equal to its declared function.
@@ -378,9 +377,9 @@
 //When we create this object, we want to make sure that this newly created object will link to the function prototype so WE KNOW THAT THE OBJECT...
 //...HAS ITS OWN __PROTO__ which will then link to the prototype object found in userCreator().
 //STEP by STEP Layman Instructions of what happens with 'new' keyword.
-//1. initialize this: {  } inside function userCreator
-//2.set __proto__ : userCreator.prototype <-just comes from the new keyword
-//3.this: { pass data } <- pass the parameters inside object .this
+//1. initialize this: create function userCreator()
+//2.set __proto__ : userCreator.prototype.(ObjectFunction) <-just comes from the new keyword
+//3.this: new userCreator()<- pass the parameters inside object .this
 //4.Return .this
 
 //````````````````````````````````````````````````

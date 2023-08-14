@@ -350,10 +350,10 @@
 // One stage where we figure out all the scopes, all the buckest, all the marbles,
 // Second stage where we use all that information to execute the code.
 
-//"use strict";
-//ReferenceErrors will show up when using Strict Mode. Its different from valueError because reference is asking for a source that isn't there.
-//Undefined means its declared but never given a value
-//Undeclared means its not declared in any scope we have access to.
+// "use strict";
+// ReferenceErrors will show up when using Strict Mode. Its different from valueError because reference is asking for a source that isn't there.
+// Undefined means its declared but never given a value
+// Undeclared means its not declared in any scope we have access to.
 
 //`````````````````````````````````````````````````````````````
 //Scope & Function Expressions
@@ -361,45 +361,162 @@
 //
 // function teacher () {/* */}
 // var myTeacher = function anotherTeacher(){console.log(anotherTeacher)}
-//Teacher is in global scope source
-//myTeacher is in golbal scope source
-//function anotherTeacher is in myTeacher variable source
+// Teacher is in global scope source
+// myTeacher is in golbal scope source
+// function anotherTeacher is in myTeacher variable source
 
-//Advanced Scope
-// var teacher = "Kyle";
-// var teacher = "Suzy";
-//They both use the same name in the same scope. Use a function to be able to remove name collision.
-//Example -
-// function anotherTeacher(){console.log("Teacher")};
-// (anotherTeacher) (); //Gets the value inside parantheses and then the second set of parenthesis will be able to call it.
+// Advanced Scope
+//      var teacher = "Kyle";
+//      var teacher = "Suzy";
+//      They both use the same name in the same scope. Use a function to be able to remove name collision.
+//      Example -
+//              function anotherTeacher(){console.log("Teacher")};
+//              (anotherTeacher) (); //Gets the value inside parantheses and then the second set of parenthesis will be able to call it.
 
-// why don't we just add the parantheses around the function declaration and do the same thing we did on line 374 so that we can call it on declaration? Yes you can!!
+//      why don't we just add the parantheses around the function declaration and do the same thing we did on line 374 so that we can call it on declaration? Yes you can!!
 
-// (function anotherTeacher(){console.log("Teacher")})(); This is called IIFE (immediately-invoked-function-expression)
-// HOWEVER THIS IS NOT A FUNCTION DECLARATION BECAUSE of the () is the first thing it reads
+//      (function anotherTeacher(){console.log("Teacher")})(); This is called IIFE (immediately-invoked-function-expression)
+//      HOWEVER THIS IS NOT A FUNCTION DECLARATION BECAUSE of the () is the first thing it reads
+// Var
+//      Var is used for the entirety of the scope in the function
+//      Let us used only for that portion of the code(couple lines of code)
+//      VAR HOISTS - attaches itself to the function scope.
+
 //
-// function lookupRecord(searchStr){
-//     try{
-//         var id = getRecord( searchStr );
-//     }
-//     catch (err){
-//         var id = -1
-//     }
-//     return id;
-// }
-//function above shows how var can be used. You can also redeclare the variable if you want to specify to the reader where you want to use in a scope (so its more behavioural)
+//      function lookupRecord(searchStr){
+//              try{
+//                      var id = getRecord( searchStr );
+//              }
+//              catch (err){
+//                      var id = -1
+//              }
+//              return id;
+//              }
+//      function above shows how var can be used. You can also redeclare the variable if you want to specify to the reader where you want to use in a scope (so its more behavioural)
 
-// function formatStr(str){
-//     {
+//      function formatStr(str){
+//      {
 //         let prefix, rest;
 //         prefix = str.slice(0,3);
 //         rest = str.slice( 3 );
 //         str = prefix.toUpperCase() + rest;
-//     }
-//     if (/^FOO:/.test(str)){
+//      }
+//      if (/^FOO:/.test(str)){
 //         return str;
-//     }
-//     return str.slice( 4 );
-// }
-// function above shows how if you have a variable that only exists for a couple of lines to create a scope. In this case we create prefix and rest to just modify variable str.
-//  this means that they only exist and only used within the limits of the scope and don't exist anywhere else within the function.
+//      }
+//      return str.slice( 4 );
+//      }
+//      function above shows how if you have a variable that only exists for a couple of lines to create a scope. In this case we create prefix and rest to just modify variable str.
+//      this means that they only exist and only used within the limits of the scope and don't exist anywhere else within the function.
+
+
+//  CONST
+//      CONST means semantic meaning as placeholders!!! Just a special Name
+//      CONST - means a thing that doesn't change. HOWEVER THATS NOT WHAT IT REALLY MEANS.
+//      Make sure that Const variable is set up as a whole digit when creating
+//      For the rest of this block it will not get reassigned. CONST
+//      For arrays and objects just do deep freeze? (object.freeze) a shallow read only.
+
+
+//  HOISTING
+//      --English language convention for lexiscal scoping.
+//      Magically looked ahead at all the definitions and moves them to the top of the function scope. However this doesn't happen. Very sophisticated and fancy process that does this which is (parsing)
+//      Shorthand to describe something that is pretty complex and hard to explain.
+//      FUNCTIONS assigned to variables have to be placed before the variable declaration.
+//      Example
+                // function teacher(){
+                //         return "Kyle";
+                // }
+                // var otherTeacher;
+
+                // teacher(); //Kyle
+                // otherTeacher(); //TypeError
+
+                // otherTeacher = function(){
+                //         return "Suzy";
+                // }
+        var teacher = "Kyle";
+        otherTeacher();
+
+        function otherTeacher(){
+                console.log(teacher);   //IN THIS CASE SINCE WE ARE HOISTING OR CALLING THE FUNCTION BEFORE THE CALL WE ALSo HOIST the var teacher line below into undefined. But we will get back a 
+                //                        undefined because it still hasn't been defined up until the second call.
+                var teacher = "Suzy";
+        }
+
+// LET DOESN"T HOIST
+//      Let does Hoist however it is not declared(so let is uninitialized) unlike a var which when hoisted will be undefined which is why we get a TDZ error(for let)
+//      Reason why let has a different behavior because CONST initialized itself to undefined and line one of that scope you console.log that const and later on that block you saw it with the value of 42.
+//      CONST shouldn't have that behavior of having two different values so they invented TDZ error to remove that feature so you can't access a value before it was undeclared/uninitialized.
+//      **Declarative Code will be hoisted, not executable code so just anything that has a name.
+
+//`````````````````````````````
+// Closure
+//`````````````````````````````
+//      Solid Definition
+//              Closure is when a function "remembers its lexical scope even when the function is executed outside that lexical scope"
+//
+
+//EX:1
+function ask(question){
+        setTimeout(function waitASec(){
+                console.log(question);  //By the time waitASec() gets called, the ask question already finished so we know that waitASec() held onto the variable question using closure to memorize.
+        }, 100);
+}
+ask("What is closure");
+
+//Closure is preserving access to a variable. Closure will only capture the variables value when it was initialized.
+
+//EX:2
+var teacher = "Kyle";
+var myTeacher = function(){
+        console.log(teacher);
+};
+teacher = "Suzy";
+myTeacher();    //prints out Kyle
+
+//EX:3
+for(var i = 1; i <= 3; i++){
+        setTimeout(function(){
+                console.log('i: ${i}'); //The reason i will be 4 every time is because the closure only ends until the end of the for loop and since i is a var it will only capture 4.
+        }, i * 1000);
+}
+// i : 4
+// i : 4
+// i : 4
+//The solution would be to make let i = 1;
+//**** Let(creates multiple) in example is created every single time, Var(only one) just redeclares it, keeps the memory.
+
+//Modules
+        var workshop = {        //Module putting set of functions and data and putting them inside an object putting them as porperties instead of variables
+                teacher: "Kyle",
+                ask(question){
+                        console.log(teacher,question);
+                },
+        };
+        workshop.ask("Is this a module?");
+        //THIS IS NOT A MODULE needs encapsulation needs hiding data and behavior!!!!! Things that are public and private.
+
+        var workshop = (function Module(teacher){
+                var publicAPI = {ask, };
+                return publicAPI;
+
+                function ask(question){
+                        console.log(teacher,question);
+                }
+        })("Kyle");
+
+        workshop.ask("Its a module, right?");   //The ask question in this case is like a singleton because the Kyle call expression of the ask function will actually keep the kyle private.
+
+        function WorkshopModule(teacher){
+                var publicAPI = {ask, };
+                return publicAPI;
+                
+                function ask(question){
+                        console.log(teacher, question);
+                }
+        };
+
+        var workshop = WorkshopModule("Kyle");
+        workshop.ask("Its a module, right?")    //We effectively created a factory functions. workshop module  factory function
+        //      (take some behavior and data that that behavior operates on, and encapsulate it into a data structure. )

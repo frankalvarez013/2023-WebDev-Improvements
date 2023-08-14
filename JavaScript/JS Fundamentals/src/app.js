@@ -66,3 +66,4 @@ let uuser = 'John',
 //  return result; // if we use curly braces, then we need an explicit "return"
 //};
 //alert( sum(1, 2) ); // 3
+//alert( sum(1,2)) -> actually creates not only the number 3 but also a prototype so that
