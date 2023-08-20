@@ -520,3 +520,255 @@ for(var i = 1; i <= 3; i++){
         var workshop = WorkshopModule("Kyle");
         workshop.ask("Its a module, right?")    //We effectively created a factory functions. workshop module  factory function
         //      (take some behavior and data that that behavior operates on, and encapsulate it into a data structure. )
+
+//````````````````````````````````````````````
+//Objects
+//````````````````````````````````````````````
+//This,Class{},Prototypes,"Inheritance" vs. "Behavior Delegation"
+//
+//      this
+//              A function's this references the execution context for that call. determined entirely by how the function was called.Definition of function doesn't matter.
+                //Ex.1
+                function ask(question){
+                        console.log(this.teacher, question);
+                }
+
+                function otherClass() {
+                        var myContext = {
+                                teacher: "Suzy"
+                        };
+                        ask.call(myContext, "Why?");    //Suzy Why?
+                }
+
+//              This Example shows how "this" can be dynamic it shows that it will get the context by where it was called using myContext "this" to grab teacher.
+//              The ask.call effectively gets the context of the object(myContext) to be set inside the function ask so that you can call this.teacher
+//              We do this also with classes. Create a function constructor that uses this.name = Parameter1(variable) and when we call it using New I can imagine if also brings the context. 
+
+//      Implicit & Explicit Binding
+                //Ex.2 This is an implicit binding.
+                var workshop = {
+                        teacher: "Kyle",
+                        ask(question){
+                                console.log(this.teacher, question);
+                        },
+                };
+                workshop.ask("What is implicit binding?");
+
+//              Because of the call site(which is workshop.ask()) the "this" will point to the workshop object.
+                //Ex.3
+                function ask(question){
+                        console.log(this.teacher, question);
+                }
+                var workshop1 = {
+                        teacher: "Kyle",
+                        ask: ask,
+                };
+                var workshop2 = {
+                        teacher: "Suzy",
+                        ask: ask,
+                };
+                workshop1.ask("How do I share a method?");
+                workshop2.ask("How do I share a method?");
+                //Its similar to Ex.1 however this time, we don't have to do .call, since its implicit binding the object contains the .this and knows what the context is so when using ask, the .this is known.
+                //Difference between Ex.1 and Ex.3 (Ex.1 called by function Ex.2 called in Object)
+                //Ex.4 This is explicit
+                function ask(question){
+                        console.log(this.teacher, question);
+                }
+                var workshop1 = {
+                        teacher: "Kyle",
+                };
+                var workshop2 = {
+                        teacher: "Suzy",
+                };
+                ask.call(workshop1,"Can I explicitly set context?");
+                ask.call(workshop2,"Can I explicitly set context?");
+                //
+                //ex.5 hard binding
+                var workshop = {
+                        teacher: "Kyle",
+                        ask(question){
+                                console.log(this.teacher,question);
+                        },
+                };
+                setTimeout(workshop.ask,10,"How Long?"); //This won't work because the call site is going to be WEIRD because of setTimeout
+                setTimeout(workshop.ask.bind(workshop),10,"Hard bound this");   //This will work.
+                //This example shows the trade off of the flexibility and how strict it can be. Depends on what you want.
+
+//      The New Keyword
+//      Constructor Calls
+//              New keyowrd call a function and bring a whole new empty object same as ask.call({},"Hello!");
+                function ask(question){
+                        console.log(this.teacher,question);
+                }
+
+                var newEmptyObject = new ask("What is 'new' doing here?");
+                //what are thoose four things that the new keyword is going to  invoke
+                // 1.Create new empty object
+                // 2. Link that object to another object
+                // 3. Call function with this set to the new object
+                // 4. If function does not return an ojbect. - assume return of this
+
+//      Default Binding
+//              use strict will actually make it so that this function below
+                function askAgain(question){
+                        "use strict";
+                        console.log(this.teacher, question);
+                }
+                askAgain("Whats the strict mode default"); //TypeError
+                //Using strict mode will make this an error because we cant invoke a this when there is nothing to this
+                //The way to fix this is to use a new keyword, use a dot call, or apply or a bind.
+
+        //Binding Precedence
+
+                new (workshop.ask.bind(workshop))("What does this do?")
+
+                //Whats the order of precedence?
+                //Prove to yourself what the order is by simply just ask those questions so if you ever tnened to ask yourself for what your this keyword will point to is
+                //is
+                //1. Is the function called by new?
+                //2. Is the function called by call() or apply()? Note: bind() effectively uses apply()
+                //3. Is the function called on a context object.
+                //4 DEFAULT: global object(except strict mode).
+
+        //Arrow functions & Lexical This
+
+        var workshop = {
+                teacher: "Kyle",
+                ask(question){
+                        setTimeout(() => {
+                                console.log(this.teacher, question);
+                        }, 100);
+                },
+        };
+
+        workshop.ask("Is this lexical 'this'?");
+        //.arrow function does not define a this keyword in a function. So if a this is gonna be in arrow function its going to lexically resolve to some enclosing scope that does define a this keyword
+        //FOR EXAMPLE: the this.teacher will have no definition inside the arrow function and then into the enclosing scope which is ask. Since workshop.ask was the one that was called, the this will point to the object.
+
+        var workshop = {
+                teacher: "Kyle",
+                ask: (question) => {
+                        console.log(this.teacher,question);
+                },
+        };
+        workshop.ask("What happened to 'this'");//undefined What happened to 'this'
+        //We know that arrow functions are not scopes, neither are objects, so when the lexically stuff happens where it looks for the reference of this.teacher,
+        //It will go to the reference call of .ask which is an arrow function and then to the global, which is undefined
+        workshop.ask.call(workshop,"Still no 'this'");
+        //This will work.
+
+        //Class
+        class Workshop {
+                constructor(teacher){
+                        this.teacher = teacher;
+                }
+                ask(question){
+                        console.log(this.teacher,question);
+                }
+        }
+
+        var deepJS = new Workshop("Kyle");
+        var reactJS = new Workshop("Suzy");
+        setTimeout(deepJS.ask, 100, "Still losing 'this'?");    //This will still give us 'undefined Still losing 'this''
+        setTimeout(deepJS.ask.bind(deepJS), 100, "Still losing 'this'?");
+        deepJS.ask("Is 'class' a class?");
+        reactJS.ask("Is this class OK?");
+
+        class AnotherWorkshop extends Workshop{
+                ask(msg){               //Shadowing is editing a method by redifining it.
+                        super.ask(msg.toUpperCase());  //Call the ask question by using super.
+                }
+        }
+
+        //The thing developers do now is make it so that the constructor when using functions will actually hard bound them like below
+        class Workshop {
+                constructor(teacher){
+                        this.teacher = teacher;
+                        this.ask = question =>{
+                                console.log(this.teacher,question);
+                        };
+                }
+        }
+        var deepJS = new Workshop("Kyle");
+        setTimeout(deepJS.ask, 100, "Is 'this' fixed?");
+        //Althought this will fix it, this goes against everything classes in JS are supposed to do because the function is supposed to be stored inside the prototype.
+
+//```````````````````````````````````````
+// Prototypes
+//```````````````````````````````````````
+//      Prototypes
+//              How Prototypes are used to implement class systems in Javascript
+//              Objects are built by "constructor calls" (via new)
+//              A "constructor call" makes an object (WRONG based on) LINKED TO its own prototype. 
+//              Class is the blueprint and instance is like when you build the thing off the blueprint
+//              Class-oriented coding is a copy operation. 
+//              What happens if you remove a wall from the blueprint and the instance removed that wall too? that would be weird
+//              The characteristics of the blueprint copied over to the instance and the relationship was removed after it was copied.
+//              My instance are inherited - copied.
+//      Prototypal Class
+                deepJS.constructor === Workshop;
+                //Is this true?
+                //There is no constructor on deepJS
+                //Prototype Chain - Goes to deepJS to prototype to Workshop because prototype links back to Workshop
+                // New constructor actualliy made it, not Workshop because that line before this implies that right?
+                deepJS.__proto__ === Workshop.prototype;        //True
+                //deepJS has a property that points to the thing that its linked to it.
+                //the __proto is called dunder proto
+                Object.getPrototypeOf(deepJS)
+
+        //Shadowing prototypes
+                deepJS.ask = function(question){        //This is shadowing
+                        this.ask(question.toUpperCase());       //This doesnt act as a super
+                }
+                deepJS.ask("Is this recursion?")        //Call site is in this line pointed to deepJS so it creates recursion
+                //How we fix, how do we go from deepJS to workshop.protoype
+
+                deepJS.ask = function(question){
+                        this.__proto__.ask.call(this,question.toUpperCase());   //if we just do this.__proto__.ask what would the .this point to, it would be workshop.proto
+                                                                                //However since it just points to it, we need the context so we add the .call for our context
+                };
+
+                deepJS.ask("Is this fake polymorphism?");
+        //Prototype Inheritance
+                function Workshop(teacher){
+                        this.teacher = teacher;
+                }
+                Workshop.prototype.ask = function(question){
+                        console.log(this.teacher,question);
+                };
+                function AnotherWorkshop(teacher){      //Within this context, use workshop as a contructor to create a AnotherWorkshop child
+                        Workshop.call(this,teacher);    //Use Workshop.call() to call Workshop constructor WHICH is INHERITED but since we are using the Workshop Object we need the "this"
+                                                        //To tell the function that .this will be appened to the object instance.
+                                                        //Remember We use the this or this. for variables that we want to MEMORIZE or that NEEDS MEMORY.
+                                                        //When we use (this) in parameter its to connect DOWN the Object. When we use this. its to call UP WHERE the OBJECT IS.
+                }
+                AnotherWorkshop.prototype = Object.create(Workshop.prototype);  //Object.create - we are saying take the prototype and link it to the Workshop.prototype
+                //                                                                Create a brand new object and link that object to another object. Like "new" just the first two steps
+                //OR do AnotherWorkshop.prototype.__proto__ = Workshop.prototype
+                AnotherWorkshop.prototype.speakUp = function(msg){
+                        this.ask(msg.toUpperCase());
+                };
+                var JSRecentParts = new AnotherWorkshop("Kyle");
+                JSRecentParts.speakUp("Is this actually inheritance?");
+                //Kyle IS THIS ACTUALLY INHERITANCE?
+                //So lets go thru the tunnel
+                //JSRecentParts.speakUp() Invocation will ask, does JSRecentParts have a function called speakUp? No, so it goes to its prototype, and it does!. THen it will lead to
+                //linke 747 which asks this.ask(msg.toUpperCase()). Since it does a this.ask() does JSRecentParts have a .ask()? No so it goes to AntoerhWorkshop.prototype, does it have a 
+                //.ask()? No so it will go to the Workshop.prototype. Does it have a .ask()? Yes it does. Use it.
+                //the .this binding is still controlled at the root by the call site.
+
+        //Classical vs Prototype Inheritance
+                //Workshop
+                        //When you create a Workshop instance, you create copies of it
+                        //When you extend the Workshop, you are copying down and when you instantiate that you create copies of it.
+                //Workshop.prototype
+                //When you create instances of Workshop, the objects are linked to the Workshop prototype
+                //When you are creating instances of AnotherWorkshop.prototype, you are linking to the Workshop.prototype
+
+        //Inheritcane is Delegation
+        //      Javascript Inheritance == "Behavior Delegation"
+        //
+        //OLOO Pattern
+        //      Object Linked to Other Objects (OLOO)
+        //

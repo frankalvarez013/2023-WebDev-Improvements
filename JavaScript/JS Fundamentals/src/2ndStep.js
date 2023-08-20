@@ -14,26 +14,29 @@
 // CallBack Function - multiplyBy2(input) <- Used this in instructions
 
 // Functions can be returned from other functions in JS
-//## createFunction(){function-newFunc(val){return console.log(val)} return newFunc}
+function createFunction(){
+    function newFunc(val){return console.log(val)}; 
+    return newFunc;
+}
 // Execution -
-//## generatedFunc = createFunction()
-//## result = generatedFunc(Bobo) <- Console will log "Bobo"
-// **generatedFunc has nothing to do with createFunction() it will only take on the callback function that was returned.
+generatedFunc = createFunction()
+result = generatedFunc(Bobo) // Console will log "Bobo"
+//generatedFunc has nothing to do with createFunction() it will only take on the callback function that was returned.
 
 // Retaining Function Memory / Closure
 
 //_________________________________
-//## function outer (){ 
-//##     let counter = 0;
-//##     function incrementCounter () {
-//##         counter ++
-//##     }
-//##     return incrementCounter;
-//## }
+function outer (){ 
+    let counter = 0;
+    function incrementCounter () {
+        counter ++
+    }
+    return incrementCounter;
+}
 
-//## const myNewFunction = outer();
-//## myNewFunction();
-//## myNewFunction();
+const myNewFunction = outer();
+myNewFunction();
+myNewFunction();
 //_________________________________
 
 // Explanation: So when we declare myNewFunction it will get the results of outer function and only remember the callback(the incrementCounter()) which was returned.
@@ -68,18 +71,18 @@
 //`````````````````````
 // setTimeout()...gets called but since its a web browser feature it will act differently to that of the call stack in JS.
 // JS is different from web browser features
-// WHEN YOU CALL ASYNC its basically telling JS that the browser will handle the SO async means we can skip to the next line as the browser will handle the retrieved data and JS will handle the
+// WHEN YOU CALL ASYNC its basically telling JS that the browser will handle it, SO async means we can skip to the next line as the browser will handle the retrieved data and JS will handle the
 // returned functionality.
 
 //_________________________________
-//## function printHello(){console.log("Hello")}
-//## function blockFor1Sec(){}
-//## setTimeout(printHello,0)
-//## blockFor1Sec()
-//## console.log("MeFirst")
+function printHello(){console.log("Hello")}
+function blockFor1Sec(){}
+setTimeout(printHello,0)
+blockFor1Sec()
+console.log("MeFirst")
 //_________________________________
 
-// What happens here is that setTimeout gets executed and sends that info into the Web Browser features "environment" where it will complete after 0ms. It will then send
+// What happens here is that setTimeout gets executed and sends that info into the Web Browser features - "environment" where it will complete after 0ms. It will then send
 // the printHello function INTO THE CALLBACK QUEUE.
 // However the global context will need to be completely finished for the print Hello function to run and get into the call stack() so that means until the whole program finishes, then at the
 // end the callback queue will work.
@@ -95,62 +98,44 @@
 // Additional calls to the returned function within the interval time should not be invoked or queued, but the timer should still get reset.
 
 //_________________________________
-//## function debounce(callback, interval) {
-//##     let duration = 0
-//##     let id
-//##     return function(){
-//##       //If set Interval has gone over or equal to 3 seconds
-//##       if(duration <= 0) {
-//##         //Reset the Timer
-//##         duration = interval
-//##         //Restart the Timer
-//##         clearInterval(id)
-//##         //Create the Timer again
-//##           id = setInterval(() => {
-//##           duration -= 100
-//##         }, 100)
-//##         //Keep Running this function
-//##         //Return the callback and execute
-//##         return callback()
-//##       }
-//##     }
-//##   }
-//## function giveHi() { return 'hi'; }
+function debounce(callback, interval) {
+    let duration = 0;
+    let id;
+    return function(){ //This function will be the callback. //This function will run when its in the call Stack after being in the call back queue.
+      
+      if(duration <= 0) {   //Duration will always be basically Dynamic, in that setInterval() will be always running
+        duration = interval //If the duration is less = to 0 then reset duration (the local variable we get from closure) back to (in this case) 3000 (we get interval from closure).
+        clearInterval(id) //We have to clearInterval because if we invoke debounce function several times, multiple setIntervals() will be running concurrently and decrement the same duration variable.
+        id = setInterval(() => { //Create the timer in the global section and every 100 seconds, go to callback queue then callstack, remove .5 seconds off of duration every .5 second.
+          duration -= 100
+        }, 100)
+        //Return the callback and execute
+        return callback()
+      }
 
-// Initiate and get the returning function this function is in the callstack
-
-//## const giveHiSometimes = debounce(giveHi, 3000);
-
-// We invoke the returning function and it will activate the setInterval() but since its from the WEB API we will ignore it and
-// go to the next line and thus return callback()
-
-//## console.log(giveHiSometimes()); // -> 'hi'
+    }
+  }
+function giveHi() { return 'hi'; } // Initiate and get the returning function this function is in the callstack
+const giveHiSometimes = debounce(giveHi, 3000); // We invoke the returning function and it will activate the setInterval() but since its the first one we automatically get the callback since duration is 0
+                                                // go to the next line and thus return callback()
+console.log(giveHiSometimes()); // -> 'hi'
+ setTimeout(function() { console.log(giveHiSometimes()); }, 2000); // -> undefined
+ setTimeout(function() { console.log(giveHiSometimes()); }, 4000); // -> 'hi'
+ setTimeout(function() { console.log(giveHiSometimes()); }, 8000); // -> 'hi'
+ setTimeout(function() { console.log(giveHiSometimes()); }, 11000); // -> 'hi'
+ setTimeout(function() { console.log(giveHiSometimes()); }, 12000); // -> 'hi'
 //_________________________________
-
-// We call setTimeout but since its a global function
-// We will actually be running all of them at 0ms and so basically none of them 
+// We call setTimeout but since its a global function We will actually be running all of them at 0ms and so basically none of them 
 // are going to be synchronous in the way that the outer setTimeOuts will call
 // but the callback functions will still have to wait in the web API, then move into the callback queue.
-// This line below gets called and moved into the web browser feature(web API) and will actually be faster than the 
+// This first setTimeout gets called and moved into the web browser feature(web API) and will actually be faster than the 
 // other setTimeout that was called in the previous line before this which had 3 seconds, so the difference between
 // the last and this line is off by 1 sec. Thus when the function gets called, it returns nothing since the if
 // statement gets returned false
-
-//_________________________________
-//## setTimeout(function() { console.log(giveHiSometimes()); }, 2000); // -> undefined
-
 // We know that since the setTimeout functions all get called at around the same time
 // We know that the previous statement was off by 1000 seconds, so the function below,
 // Will actually go over about 1000 seconds since 3000, and 4000 are off by 1000.
 // Thus the function will be called and occur and the same thing happens over in the next few lines
-//## setTimeout(function() { console.log(giveHiSometimes()); }, 4000); // -> 'hi'
-
-//## setTimeout(function() { console.log(giveHiSometimes()); }, 8000); // -> 'hi'
-
-//## setTimeout(function() { console.log(giveHiSometimes()); }, 11000); // -> 'hi'
-
-//## setTimeout(function() { console.log(giveHiSometimes()); }, 12000); // -> 'hi'
-//_________________________________
 
 // PROMISES
 //````````````````````````````````````````````````````````````````````````````````````````````````````````
@@ -166,19 +151,19 @@
 // Summary: Using two-pronged 'facade' functions that both: Initiate background web browser and Return a placeholder object (promise) immediately in Javascript
 
 //_________________________________
-//## function display(data){console.log(data)}
-//## const futureData = fetch('blah')
-//## futureData.then(display);
-//## console.log("Me First!");
+function display(data){console.log(data)}
+var futureData = fetch('blah')
+futureData.then(display);
+console.log("Me First!");
 //_________________________________
 
 // Explanation
-// futureData will contain the value:... and onfulfilled:[]<-returns empty array (because fetch returns that info)
-// futureData when the data has been retrieved from the Browser Features section, on completion it will set the Promise Object value into what was retreived.
+// futureData will contain the value:... and onfulfilled: []<- returns empty array (because fetch returns that info) And remember this is async
+// futureData when the data has been retrieved from the Browser Features section, on completion it will set the Promise Object value into what was retreived (set in the callback queue)
 // Then futureData.then(display) will actually pass a function into the Promise Object's onfulfilled array.
 // HOWEVER REMEMBER:
-// when we call the fetch, it will go to browser features and saved to object. But when we add the futureData.then(display) it will add it on the normal call stack.
-// when the fetch feature gets called and COMPLETED and returns the info it got from fetch, it will store on the futureData.value and then CALL the onfufilled FUNCTIOn automatically.
+// When we call the fetch, it will go to browser features and saved to object. But when we add the futureData.then(display) it will add it on the normal call stack.
+// When the fetch feature gets called and COMPLETED and returns the info it got from fetch, it will store on the futureData.value and then CALL the onfufilled FUNCTION automatically.
 // Its input will then be the value the promise object just obtained.
 
 // Rules by Which our promise-deferred functionality runs by
@@ -190,15 +175,15 @@
 //EXAMPLE
 
 //_________________________________
-//## function display(data){console.log(data)}
-//## function printHello(){console.log("Hello");}
-//## function blockFor300ms(){/**blocks js thread for 300ms}
-//## setTimeout(printHello, 0);
+function display(data){console.log("Bro")}
+function printHello(){console.log("Hello");}
+function blockFor300ms(){/**blocks js thread for 300ms}**/}
+setTimeout(printHello, 0);
 
-//## const futureData = fetch('https://twitter.com/will/tweets/1')
-//## futureData.then(display)
-//## blockFor300ms()
-//## console.log("Me First")
+var futureData = fetch('https://twitter.com/will/tweets/1')
+futureData.then(display)
+blockFor300ms()
+console.log("Me First")
 //_________________________________
 
 // EXPLANATION
@@ -220,19 +205,19 @@
 // Inefficent:
 
 //_________________________________
-// function userCreator(name,score){
-//    const newUser = {};
-//    newUser.name = name;
-//    newUser.score = score;
-//    newUser.increment = function() {
-//        newUser.score++;
-//    };
-//    return newUser;
-// };
+function userCreator(name,score){
+   const newUser = {};
+   newUser.name = name;
+   newUser.score = score;
+   newUser.increment = function() {
+       newUser.score++;
+   };
+   return newUser;
+};
 
-// const user1 = userCreator("Will",3);
-// const user2 = userCreator("Tim",5);
-// user1.increment;
+var user1 = userCreator("Will",3);
+var user2 = userCreator("Tim",5);
+user1.increment;
 //_________________________________
 // We can generate objects using a function however we have to understand that this method is not efficient nor practical because each object...
 //...will have the same function copied over for all objects when really we only need 1 over the whole application and if we wanted to add another function...
@@ -247,24 +232,24 @@
 // Efficient
 
 //_________________________________
-//## function userCreator(name,score){
-//##     const newUser = Object.create(userFunctionStore);
-//##     newUser.name = name;
-//##     newUser.score = score;
-//##     newUser.increment = function() {
-//##         newUser.score++;
-//##     };
-//##     return newUser;
-//## };
+function userCreator(name,score){
+    const newUser = Object.create(userFunctionStore);
+    newUser.name = name;
+    newUser.score = score;
+    newUser.increment = function() {
+        newUser.score++;
+    };
+    return newUser;
+};
 
-//## const userFunctionStore = {
-//##   increment: function(){this.score++;},
-//##   login: function(){console.log("Logged in");}
-//## };
+var userFunctionStore = {
+  increment: function(){this.score++;},
+  login: function(){console.log("Logged in");}
+};
 
-//## const user1 = userCreator("Will",3);
-//## const user2 = userCreator("Tim",5);
-//## user1.hasOwnProperty('score')
+var user1 = userCreator("Will",3);
+var user2 = userCreator("Tim",5);
+user1.hasOwnProperty('score')
 //_________________________________
 
 // Explanation
@@ -278,12 +263,12 @@
 
 // Imagine we replace userFunctionStore with this:
 //_________________________________
-//## const userFunctionStore = {
-//##   increment: function(){
-//##      function add1(){ this.score++;}
-//##      add1()
-//##}
-//## };
+var userFunctionStore = {
+  increment: function(){
+     function add1(){ this.score++;}
+     add1()
+}
+};
 //_________________________________
 
 // When we run userFunctionStore, the increment function will contain:this:user1 and add1(), and when we run add1() its this: property will be empty and it will be undefined because it refers to global.
@@ -293,12 +278,12 @@
 // Imagine we replace userFunctionStore with this:
 
 //_________________________________
-//## const userFunctionStore = {
-//##   increment: function(){
-//##      function add1(){ this.score++;}
-//##      add1.call(this)
-//##}
-//## };
+var userFunctionStore = {
+  increment: function(){
+     function add1(){ this.score++;}
+     add1.call(this)
+}
+};
 //_________________________________
 
 // this will contain user1 and it will work this time
@@ -306,8 +291,8 @@
 // The => actually overrides the normal this rules so instead of having to .call(this) we can declare the function as
 
 //_________________________________
-//## const add1 = () => { this.score++; }
-//## add1()
+const add1 = () => { this.score++; }
+add1()
 //_________________________________
 
 // Due to the arrow functions Lexiscally scope, we know that it comes from the parent function and thus carries (.this)
@@ -328,14 +313,14 @@
 // ````````````````````````````````````````````````````
 
 //_________________________________
-//## function userCreator(name,score){
-//##   this.name = name;
-//##   this.score = score;
-//## };
+function userCreator(name,score){
+  this.name = name;
+  this.score = score;
+};
 
-//## userCreator.prototype; //just showing that proto is empty []
-//## userCreator.porototype.increment = function(){ this.score++ };
-//## const user1 = new userCreator("Will", 3);
+userCreator.prototype; //just showing that proto is empty []
+userCreator.porototype.increment = function(){ this.score++ };
+var user1 = new userCreator("Will", 3);
 //_________________________________
 
 // Above code is actually so much more easier than all the rest
@@ -347,10 +332,10 @@
 //SMALL EXAMPLE BELOW
 
 //_________________________________
-//## function add(num){return num*2}
-//## add.stored = 5
-//## add(5) //10
-//## add.stored //5
+function add(num){return num*2}
+add.stored = 5
+add(5) //10
+add.stored //5
 //_________________________________
 
 // as long as we don't use the paranthesis, it will act as an object.
@@ -364,14 +349,14 @@
 //...is able to access(make sure use .this) it as the new keyword links all those objects to the function userCreator prototype.
 //Keyword Example (again)
 //_________________________________
-//## function userCreator(name,score){
-//##   this.name = name;
-//##   this.score = score;
-//## };
+function userCreator(name,score){
+  this.name = name;
+  this.score = score;
+};
 
-//## userCreator.prototype; //just showing that proto is empty []
-//## userCreator.porototype.increment = function(){ this.score++ };
-//## const user1 = new userCreator("Will", 3);
+userCreator.prototype; //just showing that proto is empty []
+userCreator.prototype.increment = function(){ this.score++ };
+const user1 = new userCreator("Will", 3);
 //_________________________________
 //We know that when we use "new" keyword, we actually auto-create a new object which will be referenced by the this. found in the function userCreator()
 //When we create this object, we want to make sure that this newly created object will link to the function prototype so WE KNOW THAT THE OBJECT...
@@ -387,18 +372,18 @@
 //````````````````````````````````````````````````
 //
 //Solution 4: The class 'syntactic sugar'
-//We're writing our shared methods separately from our object 'constructor' as we have function linked to the 
-//Other languages let us do this all on one place which is CLASS
-// class UserCreator {
-//     constructor(name,score){
-//         this.name = name;
-//         this.score = score;
-//     }
-//     increment (){this.score++;}
-//     login () {console.log("login");}
-// }
-// const user1 = new UserCreator("Eva",9);
-// user1.increment();
+// We're writing our shared methods separately from our object 'constructor' as we have function linked to the 
+// Other languages let us do this all on one place which is CLASS
+class UserCreator {
+    constructor(name,score){
+        this.name = name;
+        this.score = score;
+    }
+    increment (){this.score++;}
+    login () {console.log("login");}
+}
+const user1 = new UserCreator("Eva",9);
+user1.increment();
 //Explanation
 //Constructor becomes the default function from the class userCreator
 //The prototype are just the functioned bundled under the class.
