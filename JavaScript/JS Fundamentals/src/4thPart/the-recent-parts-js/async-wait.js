@@ -16,6 +16,10 @@ async function loadFiles(files) {   //Reason why we have to use async here is be
     for (let pr of prs){       //
         console.log(await pr);  //hERE WHEN WE use AWAIT, the promise will execute and we suspend code until we get back the Promise completion on callback queue.
     }
+	//OR
+	// prs.forEach(function each(pr){
+	// 	console.log(await pr);
+	// });
 }
 
 loadFiles(["file1","file2","file3"]);

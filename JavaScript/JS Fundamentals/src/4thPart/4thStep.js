@@ -364,3 +364,68 @@
                         ]);
                 }
                 main();
+
+        //Async Iteration
+            // Issues
+            //  RUn a function and pass in ForEach, you might have noticed if you use await using forEach it won't work because the function callback will not be async
+                // prs.forEach(function each(pr){
+                //     console.log(await pr);
+                // });
+            // forEach does not know how to wait for a promise
+            // There is a missing piece to the puzzle and what we need is an async iterator (we need it to pause at each iteration and wait for a promise.)
+            //  The .map, .filter those are all sync iterators, they run eagerly over the value in the array, and they shouldn't know when to pause
+            // so we need an eager async iterator, tries to go to each value, but if there is a promise it shouldw ait.
+            // There is not yet any solution that JS provides.
+        // FASY LIBRARY
+            // provides that solution
+                // async function fetchFiles(files){
+                //     var prs = await fakeAjax.concurrent.map(getFile, files);
+
+                //     await fakeAjax.serial.forEach(async function each(pr){
+                //         console.log(await pr);
+                //     })
+                // }
+        // Async Function Problems   
+            // await Only Pronmises
+                //This only works for 
+                //Useful for a Func, useful for custom Promise.
+                //Solution: Iterator/Generator
+                        //:Generators can yield anytime of value
+            //Scheduling (Starvation)
+                //Promices when they need to resolve itself will be placed on the MicroTask Queue instead of the event loop
+                //MircoTask Queue will be a cut to the front of hte line
+                // Starvation: When Promises keep adding to the MicroTask Queue
+            //BIG DEAL: External Cancelation
+                //You can't tell a promise to stop, it iwll continue to consume resources until it finishes.
+            //Async Generators with yield
+                //await only pulls, generators push...WHy not both?
+                //async* yield await
+                    async function *fetchURLs(urls){
+                        for (let url of urls){
+                            let resp = await fetch( url );
+                            if (resp.status == 200) {
+                                let text = await resp.text(); //pull
+                                yield text.toUpperCase();   //push
+                            } else {
+                                yield undefined;
+                            }
+                        }
+                    }
+            //Asyn Generators Iteration
+                    //Past
+                        async function main(favoriteSites){
+                            var it = fetchURLs(favoriteSites);
+
+                            while (true) {
+                                let res = await it.next();  //Wihtout the await we receive the actual Promise, not the value so we add await
+                                if (res.done) break;
+                                let text = res.value;
+                                console.log(text);
+                            }
+                        }
+                    //NOW
+                        async function main(favoriteSites) {    //The example above is nice, but for a better syntatic sugar we added an await on the for loop
+                            for await (let text of fetchURLs( favoriteSites)){
+                                console.log(text);
+                            }
+                        }
