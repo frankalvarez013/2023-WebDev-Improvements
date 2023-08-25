@@ -352,7 +352,7 @@
                     fetchCurrentOrders( user.id)
                 ]);
             
-            });//  fetch out the current user and yeild out the result of that which is apromise and wait for that to come back.
+            });//  fetch out the current user and yeild out the result of that which is a promise and wait for that to come back.
             //Can we do this without having a runner?
             //Now we have an Async function
                 async function main() {
