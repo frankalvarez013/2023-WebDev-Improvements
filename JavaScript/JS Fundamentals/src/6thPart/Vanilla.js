@@ -199,3 +199,127 @@
             })
         //popstate won't be fired if the user clicks on an external link or changes the URL manually
         //Popstate only works within the web app.
+
+//Web Components
+    //Context
+        //Instead of inserting everything itno HTML we can use web components
+        // Modular reusable building block for we dev that holds a set of related functionality and user interface elements.
+    //Def: In short, your own custom HTML tag elements
+    //Pros:
+            //Compatible with every browser
+            //Set of standards (umbrella) 
+                    //Custom Elements
+                    // Html Templates
+                    // Show DOMExceptionDeclareative Shhadow DOM
+            //Its similar to the idea of componentets on most of thelibraires for JS
+            //We have freedom of choice on how to define them and use them
+    //Custom Element
+        //Define new new html element
+        //Example
+            class MyElement extends HTMLElement {
+                constructor(){
+                    super();
+                    this.dataset.language //ON HTML -> <body><my-eleement data-language="en"></my-element>  we can define our own custom attributes using the data*-spec
+                }
+            }
+            customElements.define("my-element", MyElement);
+            //<script>document.createElement("my-element");
+            //OR <body><my-element></my-element></body>
+
+    //Custom Elements Lifecycle
+        //We can override some methods of the super class
+        class MyElement extends HTMLElement {
+            constructor(){
+                super();
+            }
+            connectedCallback() {};     //Element is added
+            disconnectedCallback(){};   //Eleemnt is removed
+            adoptedCallback(){};    //The element has been moved to a new doc
+            // attributeChangedCallback(name,oldValue, new Value());
+        }
+    //Template Element
+        //Def: Fragments of markup that can be cloned and inserted into the document at runtime (blah blah)which can be rendered dynamically
+        //We have the template elements
+            //A tag that the element ignores, 
+            //<template><section><ul></ul></section></template> The elements get ignored inside
+            //IN JS we get content in template and we create instances of those templates into the DOM
+        function connectedCallback(){
+            const template = document.getElementById("templateID");
+            const content = template.content.cloneNode(true);   //WE clone it and then we use it the template
+            this.appendChild(content);
+        }
+        //If the template Element has a style into it, so css styles apply to the whole doc
+        //if template has <template><style..></style><template> it will change all the css changes inside the style sheet for the whole doc and not just the template
+    //Shadow DOM
+        //Def
+            //A private, isolated DOM tree within a web component that is separate from the main document's DOM tree (you have your owon DOM)
+            //...We had a chance to adopt an element from another DOM so in this case we are moving an element fromt the shadow DOM to the DOM.
+        //Pros:
+            //Allows more control over style and encapsulation of functionality of a Custom Element
+            //CSS declared in the main DOM won't be applied to the Shadow DOM - by default
+            //CSS declared in the Shadow DOM applies only on there.
+            //There are new pseudo-classes and pseudo-elemnt to allow communication between DOMS in stylesheets
+            //It can be opened or closed defining visibility from the outer DOM
+        //Example
+        class MyElement extends HTMLElement {
+            construcotr() {
+                super();
+                this.root = this.attachedShadow({mode: "open"});
+            }
+
+            connectedCallback(){
+                this.root.appendCHild(); //Now we have our innerDOM and work with the Inner DOM
+            }
+        }
+        //Now the style will only work with that specific componenet when using the template method
+        //Where to define HTML for a Custom Element
+            //Alternatives:
+                //Use DOM APIs
+                //Use a <template> in the main HTML
+                //Use an external HTML file loaded with fetch( it can be prefetched)
+
+    //Declarative Shadow DOM
+        //Def:
+            //A way to define Shadow DOM directly in HTML markup using a new set of attributes and tags
+        //Where to define CSS for a Custom Element
+            //Alternatives
+                //Use CSSOM APis
+                //Add a <script> to a <template>
+                //Link
+                //Use an external CSS file loaded with fetch ( it can be prefteched ) and injected in the Shadow DOM as a <style>
+//Reactive Programming with Proxyies
+    //Creating a Proxy
+        //Def: Simple way that we have in JS to listen for changes in an object
+        //      (A wrapper object that performs operations on a wrapped obct)
+    //Ex
+        //const original = {name: 'John Doe', age: 30}
+        //const s = new Proxy(original, handler);
+        //const handler = {get: function(target,prop){if(property === 'age'){return target[prop]+' years old';} else {return target[prop];}}}
+        //handler is an object. get is a function that will be executed everytime someone is getting
+        // a specific property. if property is age I will take the current val of that property and add something to it
+        // Kind of a getter for an object. Once you create that object, you will never need to use it again, you will just need to  use a proxy.
+        //console.log(s.age); //30 years old
+        //We can use a proxy for validation, data binding and reactive programming
+        //We can instead of get use a set, when we try to update the value
+        //Proxies work with objects only.
+        //Proxy Handler is the second argument/object that contains traps for interceptings/
+        //Proxy Trap - intercepts an customeizes (kind of like an event)
+        //Most Used Proxy Traps
+            //get
+            //set********** means taht someone is changing the value of property (someone has changed the art or cart, we can trigger updates and update the UI)
+            //has
+            //deleteProperty
+            //apply
+            //construct
+            //getOwnPropertyDescriptor
+            //defineProperty
+            //ownKeys
+//Double Binding
+    //Binding Form Data
+        //When you are typing something and you change the input can we automatically update the object?
+        //Have an automatic change in the input
+        //For that we can use the same idea as the proxy
+
+//If we try to go to direct link, it will give us an error
+        //Single page aplication you have to set up your server for forwarding.
+        //React does the same, if we create a react folder and put it into apache it won't work because it has the ame error.

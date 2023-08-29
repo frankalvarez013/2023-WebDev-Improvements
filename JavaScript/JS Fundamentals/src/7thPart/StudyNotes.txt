@@ -1,0 +1,30 @@
+Intermediate HTML & CSS
+    Planning
+        1. UX - Identifying problems, researching solutions
+        2. UI - Informed by UX, create an interface to address the problem. Test early and often
+        3. Content - Informed by UX, tell a story about the problem and its solution
+        4. HTML - Identify the parts of the content: list, links, heading, etc.
+        5. CSS - Make the marked up content look pretty. Add HTML sparginly only to hold required CSS classes and group elements for styling
+
+    HTML Elements Vocab
+        Indentifies the elements of the web page
+            NOT RESPONSIBLE FOR THE DISPLAY OF THE PAGE
+    
+    Cascade
+        Whath happens when you declare/intiate two tags on CSS? like on seperate places one at the start of the doc, or end of the doc.
+        Cascade means that the later initalization of the tag will win.
+
+    Pseudo-Classes
+        Example
+            These are the unvisited links of a page
+            a:link{
+            }
+
+            These are the visited links of a page
+            a:visited{
+            }
+        
+            a.harvard{} (any a tag that has a class of harvard)
+            a.harvard:link{} any a tag that has a class of harvard with a link
+        
+            ul a:link {} for all unvisited links located inside of an unordered list (child)

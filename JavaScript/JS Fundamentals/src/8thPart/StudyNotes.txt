@@ -1,0 +1,22 @@
+INTRODUCTION
+    HTML is used to convey information
+    Meaning and organization are the core concepts of HTML
+
+TEXT
+
+    Practice:
+        Span is for Paragraphs no need to break it up into blocks
+        HTML is not a decorative flavor, its a meaning and a story
+
+    Variables & Styling SetUp:
+        :root <- pseudo class - indicates top of the document
+            Why not use html css property? cuz we want to load this before the 
+            pseudo class is more heavily weighted in the cascade than in HTML
+            :root are global, the variables inside such as:
+            --black: #412311;
+            Will actually be variables we can use that are prewritten for us.
+
+Border-Box Model
+    
+
+        

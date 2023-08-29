@@ -8,6 +8,14 @@ import Router from './services/Router.js';
 //everytime we use app we are accessing that singleton
 //before modules they were global
 
+//Link My Web Component
+import {MenuPage} from './components/MenuPage.js';  //Just by importing the browser will load that file and it will execute that model and execute the define in the .js and
+    //Browser will now know we are defining a new web component
+import {OrderPage} from './components/OrderPage.js';
+import {DetailsPage} from './components/DetailsPage.js';
+import ProductItem from './components/ProductItems.js';
+import CartItem from './components/CartItem.js';
+//side effect of importing the file is executing the file
 window.app = {}     //app could be any name
 app.store = Store;
 app.router = Router;
@@ -23,3 +31,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     app.router.init();
 })
 //How to import both API and App.js? T ouse ES modules, we all need these scripts to Modules
+
+//every time the cart is changing we can change that even before rendering the section. And to do that we can do that in app.js because this is globa (part of the navigation)
+//Thats our custom event, every time the cart is changing so we want it to do something (change from data changes)
+window.addEventListener("appcartchange",event =>{
+    const badge = document.getElementById("badge");
+    // const qty = app.store.cart.length; //This wont work, how many items int the cart
+    const qty = app.store.cart.reduce((acc,item)=>acc + item.quantity, 0);
+    badge.textContent = qty;
+    badge.hidden = qty == 0;
+});

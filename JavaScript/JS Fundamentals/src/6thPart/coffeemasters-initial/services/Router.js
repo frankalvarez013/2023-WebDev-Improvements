@@ -9,6 +9,10 @@ const Router =  {
                 Router.go(url);
             })
         })
+        //Event Handler for URL chaanges
+        window.addEventListener("popstate",event =>{    //event is the link
+            Router.go(event.state.route, false);    //false cuz we don't want to add more events into history that have already been recorded
+        })
         //Check the initial URL
         Router.go(location.pathname);   //When we initialize the app we cbeck the initial url, cuz a user could have a link to /cart
     },
@@ -21,19 +25,17 @@ const Router =  {
         let pageElement = null; //This means that we will simply inject the content that this "other" url would have into the page
         switch (route){
             case "/":
-                pageElement = document.createElement("h1");
-                pageElement.textContent = "Menu";
+                pageElement = document.createElement("menu-page");  //Because in our app.js we imported the file it auto. checked if it was there. Since we created a customElement
                 break;
             case "/order":
-                pageElement = document.createElement("h1");
-                pageElement.textContent = "Your Order";
+                pageElement = document.createElement("order-page");
                 break;
             default:
-                if (route.startWith("/product-")){
-                    pageElement = document.createElement("h1");
-                    pageElement.textContent = "Details";
+                if (route.startsWith("/product-")){
+                    pageElement = document.createElement("details-page");
                     const paramId = route.substring(route.lastIndexOf("-")+1);
-                    pageElement.dataset.id = paramId;
+                    pageElement.dataset.productId = paramId;   //Data attributes known as dataset. every element has a dataset option and we can set the id. This is gonna be just fro custom 
+                    //If in html its like <span data-set = ""></span>
                 }
         }
         const cache = document.querySelector("main");         //children will give us nodes
