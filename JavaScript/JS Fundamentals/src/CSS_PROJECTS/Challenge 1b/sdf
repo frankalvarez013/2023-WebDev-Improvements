@@ -1,0 +1,32 @@
+ @media (min-width: 800px) {
+    /* image is still in the 2nd column! */
+    .fancy-text {
+      font-size: var(--xl);
+    }
+    article {
+      grid-template-columns: 2fr 1fr;
+    }
+    .article-img-wrapper {
+       margin: .5rem 0 0 2rem;
+    }
+    .main-text {
+      columns: 2;
+      column-gap: 2rem;
+    }
+    .main-text p {
+      margin-top: 0;
+    }
+  }
+  @media (min-width: 1000px) {
+    article {
+      display: block;
+    }
+    .main-text {
+      columns: 3;
+    }
+    .article-img-wrapper {
+      max-width: 100%;
+      height: 500px;
+      margin: 3rem 0 0 0;
+    }
+  }

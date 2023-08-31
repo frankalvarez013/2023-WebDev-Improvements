@@ -1,0 +1,23 @@
+Should plan:
+    Mobile phone
+        Only so much you can work On
+            Work on smaller to bigger because its easier
+    
+Dont use units for line height - it removes the ratio?
+
+width - relative to container
+
+max-width - relative to the image itself
+
+Body
+    If you apply something that has to do with text
+    the children will inherit
+    If you apply something that has to do with sizing, 
+    it will only affect the Body(not inherit)
+
+if we use (element) > * {} that style
+the (parent > *) says give this styles to all the children within this parents
+alone. Don't style the children of the children
+
+border-box:
+    

@@ -1,0 +1,4 @@
+one footer for the web page will contain things about the whole page
+footer for the article can contain its authoer and time on when its written etc etc.
+Margin collapses so 1 rem + 1 rem = 1rem
+Padding doesn't collapse so 1 rem + 1 rem = 2 rem

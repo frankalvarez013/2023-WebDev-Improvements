@@ -25,6 +25,38 @@ Intermediate HTML & CSS
             }
         
             a.harvard{} (any a tag that has a class of harvard)
-            a.harvard:link{} any a tag that has a class of harvard with a link
+            a.harvard:link{} any a tag that has a class of harvard with an unvisisted link
         
             ul a:link {} for all unvisited links located inside of an unordered list (child)
+    
+    Grouped Selectors
+        h2, h4 {
+            color: red;
+        }
+    
+    ID
+        Used once in HTML, used mainly for JS
+        Example:
+            #myID {
+                color: blue;
+            }
+
+CSS Spacing
+    The Box Model
+        Box Model contains padding, border, margin, width and height
+        It also has an display:inline, display:block
+    Padding
+        A good way of diagnosing your CSS is putting a border around your HTMLElements
+
+    Block vs Inline 
+        Block - Covers the whole container
+        Inline - Covers only the content
+    
+    CSS Units
+        EM - em depends ->
+            Example
+                lower case m is lower than capital M
+                padding: 1 rem to a h1 and p will be different
+        REM
+            Example
+                Same size
