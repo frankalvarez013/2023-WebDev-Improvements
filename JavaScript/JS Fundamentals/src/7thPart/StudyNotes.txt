@@ -28,6 +28,8 @@ Intermediate HTML & CSS
             a.harvard:link{} any a tag that has a class of harvard with an unvisisted link
         
             ul a:link {} for all unvisited links located inside of an unordered list (child)
+
+            nav ul {} for all ul's descended from nav
     
     Grouped Selectors
         h2, h4 {
@@ -42,21 +44,69 @@ Intermediate HTML & CSS
             }
 
 CSS Spacing
+
     The Box Model
         Box Model contains padding, border, margin, width and height
         It also has an display:inline, display:block
+            Inline - box is only as wide as the content
+            Block - boxes are all stretched out across the whole window
+
     Padding
         A good way of diagnosing your CSS is putting a border around your HTMLElements
 
-    Block vs Inline 
-        Block - Covers the whole container
-        Inline - Covers only the content
+        The CSS width property specifies the width of the element's content area. The content area is the portion inside the padding, border, and margin of an element (the box model).
+        So, if an element has a specified width, the padding added to that element will be added to the total width of the element. This is often an undesirable result.
+        To keep the width at 300px, no matter the amount of padding, you can use the box-sizing property. This causes the element to maintain its actual width; if you increase the padding, 
+        the available content space will decrease.
     
     CSS Units
         EM - em depends ->
             Example
                 lower case m is lower than capital M
-                padding: 1 rem to a h1 and p will be different
+                padding: 1 em to a h1 and 1 em to a p will be different
         REM
             Example
                 Same size
+
+    Width 
+        block element- width by default are the width of parent, do them in %s
+    height
+        background-img needs height specs to work when shoving them into a div class
+        height in this case would be in pixels since images are defined in pixels
+        height is dependent on the content so if there is no content then there would be no height
+    DONT USE HEIGHTS
+        you want ur design to be flexible and robust and if you add more things to the div then the height spec will interfere with the content
+    
+    Inline elements: you can only add padding to either side
+    Add it to the block element where the inline element is descended from\
+
+    Inline-block
+        Allows elements to be next to each other but also allows the width
+        Apply the inline-block to the li
+        Used mostly for nav bars
+
+.floatleft{
+    float:left; // Will make the element be next to the text 
+}
+If you float you must clear
+this is because if you don't then you will get a bunch of errors
+we will create a lil formula below:
+article:after{  //add this to the parent, after is the little bit of space after the article
+    content: "";
+    display: table;
+    clear: both;    - clear left and right so that any float is clear 
+}
+psuedo class after 
+margin: 0 auto; //Centered
+
+
+FlexBox
+    Are like an unordered List - parent and children
+    FlexBox are inline
+        display: flex
+        flex-flow: row or column
+        flex-flow: row wrap //means it will move the children if necessary without resizing the elements
+        flow-flow: row nowrap //keep the row in one line by resizing the elements
+        justify-content: flex-start; flex-end: at the end; center;
+        flex children will have a default width depending on other children - if you have 4 children, they will be 25% width
+        flex-basis: 10%; all children will be 10%

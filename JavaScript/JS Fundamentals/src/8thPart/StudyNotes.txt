@@ -16,7 +16,42 @@ TEXT
             --black: #412311;
             Will actually be variables we can use that are prewritten for us.
 
-Border-Box Model
-    
+CSS OVERVIEW
 
+    CSS Reset Box-sizing
+        Anything that comes before it and after it apply this onto everything
+        *,  
+        *::before,
+        *::after{
+            box-sizing: border-box; //default is the content-box - when we start to figure out how big everything is, we are going to add the width of border, pading, and margin + copntent will be
+            the width of our box.
+            when we include border-box we include all of that. 
+            So when we say border box we will lump it all so if we say width is 500 pixel in content box the content would be 500px - we would still have to add more that the padding the border and the margin
+            now border box will contain all of that in the 500px
+        }
+
+    Class, ID, & Descendent Selectors
+        /* */
+        > just gets the immediate children
+        ul .nested > li {  (read backwards) li is the child of .nested whose descendent(different from child cuz it goes all the way to the top of the tree) is ul
+
+        }
+        ul.nested <- ul with a class of nested together
+
+        ul.nested > li ~ li {
+            //will not affect the first sibling
+        }
+
+    Attribute Selector
+        HTML would look like this <li>Here is an <a href="#" target="_blank" title="unguessable">
+        [title="unguessable"] {
+            color:white;
+        }
+        substring...
+        [title*="guess"] {
+            color:white;
+        }
+
+Styling Elements
+    Description Lists & Flexbox
         

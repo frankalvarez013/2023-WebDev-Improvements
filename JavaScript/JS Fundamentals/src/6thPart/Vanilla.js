@@ -262,7 +262,7 @@
             //It can be opened or closed defining visibility from the outer DOM
         //Example
         class MyElement extends HTMLElement {
-            construcotr() {
+            constructor() {
                 super();
                 this.root = this.attachedShadow({mode: "open"});
             }
