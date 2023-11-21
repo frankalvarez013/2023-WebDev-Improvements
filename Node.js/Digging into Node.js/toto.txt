@@ -1,0 +1,27 @@
+front & end dont really work together
+
+Middle end - routing data
+
+Node - serverside js?
+
+History says No
+
+you find that it was even Node.js - set out to build low latency socket services. system was comprised of single sockets that communicated
+to each other (it was originally used Ruby) he needed an event loop for Ruby for this async thing to work. JS was a lot easier to make this,
+so he used JS.
+
+Node is so compelling for how async communcation, I/O bound tasks should be modeled with JS.
+I/o bound task - read and writing from a disk, making network connections.
+as opposed to CPU bound tasks, whcih are in the CPU I/O bound tasks are two - three orders of magnitude of slower (milliseconds) 
+The prevailling thought to do concurrency was thru threads
+But they are not the most efficient way
+Async event loop is much more compleeling model for I/O bound tasks
+Thats why Node was so succesful because theres some really compleling benefits high throughoupt low latency I/O communcaitions. 
+Thats one of the sweet spots of Node
+
+POSIX | essentially the way c style programs integrate with linux style programs - uses the standrdr I/O that use stream.
+
+JS is agnostic to I/O
+its easy for JS to adapt ot other environments like robots TVs Fridges Smart Watchees cuz the language doesnt make many assumptions about how to communicated
+.
+In the browser its different hosting from how Node.js uses
