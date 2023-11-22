@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
 "use strict";
-//use strict 
-//saying go find node in my system and use node to interpret the rest of my program
-//tells the shell environment it knows what program to hand that execution towards.
 
 var util = require("util")
 var path = require('path')
 var fs = require('fs')
+
 //streams are first class citizens - kind of data structure
 //to write to steam we write we call .write()
 // process.stdout.write("Hello World")
@@ -80,7 +78,7 @@ function printHelp(){
 }
 
 function processFile(filepath){
-    var contents = fs.readFile(filepath, function onContents(err,contents){
+    fs.readFile(filepath, function onContents(err,contents){
         if (err){
             //err is going to be another object so we want to toString() it.
             error(err.toString())

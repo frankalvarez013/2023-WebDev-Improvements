@@ -6,12 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
     "get-stdin": "^9.0.0",
     "minimist": "^1.2.8",
     "path": "^0.12.7",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "zlib": "^1.0.5"
   }
 }
