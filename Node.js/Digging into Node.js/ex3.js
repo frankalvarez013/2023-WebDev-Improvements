@@ -13,6 +13,7 @@ import {fileURLToPath} from 'url'
 import {dirname} from 'path'
 import { Transform } from 'stream';
 import zlib from 'zlib';
+import {CAF} from "caf";
 const __filename = fileURLToPath(import.meta.url)
 const name = dirname(__filename)
 
@@ -25,10 +26,19 @@ var args = minimist(process.argv.slice(2), {
     string: [ "file" ]
 });
 
+processFile = CAF(processFile);
+
+//helper function
 function streamComplete(stream){
     return new Promise(function c(res){
+        //the.pipe utility is listening for events
+        //like an end event
+        //so if we listen for it
+        //then we know it has finished.
         stream.on("end",function(){
-            c();
+            //call c to signal that the stream
+            //has reached the end
+            res();
         })
     })
 }
@@ -38,10 +48,15 @@ var OUTFILE = path.join(BASE_PATH, "out.txt");
 if (args.help){
     printHelp();
 } else if (args.in || args._.includes("-")){
-    processFile(process.stdin).catch(error);
+    let tooLong = CAF.timeout(13, "took too long!");
+
+    processFile(tooLong,process.stdin).catch(error);
 } else if (args.file){
     let stream = fs.createReadStream(path.join(BASE_PATH,args.file));
-    processFile(stream).then(function(){
+    
+    let tooLong = CAF.timeout(13, "took too long!");
+
+    processFile(tooLong,stream).then(function(){
         console.log("Complete!"); 
     }).catch(error)
 } else {
@@ -62,8 +77,8 @@ function printHelp(){
     console.log("  ex.j1 --file={FILENAME}\t\tprocess the file")
     console.log("--in, -\t\tprocess stdin")
 }
-
-async function processFile(inStream){
+//turn to a generator to use CAF
+function *processFile(signal,inStream){
     var outStream = inStream;
 
     if (args.uncompress){
@@ -99,5 +114,20 @@ async function processFile(inStream){
     }
 
     outStream.pipe(targetStream);
+    //used to straight up cancel the stream cuz we used a timeout
+    signal.pr.catch(function f(){
+        //in the middle of that pipe stop sending chunks
+        outStream.unpipe(targetStream);
+        //telling the rest of the stream to not do work
+        //effect of pushing that signal back up to the other streams
+        //and telling them there is no piping happening because there is no 
+        //target
+        //kills streaming processing.
+        outStream.destroy();
+    })
 
+    
+    //remember this is all async so
+    //yield is await but in generator talk
+    yield streamComplete(outStream);
 }
