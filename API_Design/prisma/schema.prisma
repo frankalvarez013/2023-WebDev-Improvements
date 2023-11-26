@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  // id - can only have 1 id (this is the primary key)
+  // uuid() - generates the id for us
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  username  String    @unique
+  password  String
+  products  Product[]
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  name        String   @db.VarChar(255)
+  //define the field in which the user is referenced - belongs to User
+  // String is used because User id is String
+  belongsToId String
+  // To set the relationship up we add this below
+  // type User
+  // relation - fields (what feidls in product schema hold the relation?)
+  //basically it asks what in the product has the relationship? its the belongstoID
+  //and then it asks for a referencel like, what is the name of the id in the external model - id
+  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  updates     Update[]
+}
+
+enum UPDATE_STATUS {
+  IN_PROGRESS
+  SHIPPED
+  DEPRECATED
+}
+
+model Update {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  title   String
+  body    String
+  status  UPDATE_STATUS @default(IN_PROGRESS)
+  version String?
+  asset   String?
+
+  productId   String
+  product     Product       @relation(fields: [productId], references: [id])
+  updatePoints UpdatePoint[]
+}
+
+model UpdatePoint {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  name        String @db.VarChar(255)
+  description String
+
+  updateId String
+  update   Update @relation(fields: [updateId], references: [id])
+}
