@@ -35,6 +35,8 @@ model Product {
   //and then it asks for a referencel like, what is the name of the id in the external model - id
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   updates     Update[]
+  //so now thats unique - id and it belongs to id
+  @@unique([id,belongsToId])
 }
 
 enum UPDATE_STATUS {
