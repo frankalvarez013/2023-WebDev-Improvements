@@ -21,10 +21,9 @@ app.use((req,res,next)=>{
     req.shhh_secret = 'doggy'
     next()
 })
-app.get('/', (req,res)=>{
-    console.log('hello from express')
-    res.status(200)
-    res.json({message: 'hello'})
+//handlers do not pass next- BUT THEY DO, for errors only tho
+app.get('/', (req, res, next)=>{
+    res.json({message:'hello'})
     // you can send a bunch of stuff back
     // like html file text/ an image
     // a server can send pretty much anything
@@ -39,4 +38,15 @@ app.use('/api',protect, router) //the router will be basically letting us get ac
 //we don't use protect because we want everyone to be able to signin/signup
 app.post('/user',createNewUser)
 app.post('/signin',signin)
+//remember for error handling each subrouter needs its own set of errors, user and signin won't need any more that there is here in the main router
+//since they are listed here, but for product, update and updatePoint, they will need their own set of error handling cuz they are in subrouters.
+app.use((err,req,res,next) =>{
+    if (err.type === 'auth'){
+        res.status(401).json({message: 'unauthorized'})
+    } else if (err.type === 'input'){
+        res.status(401).json({message: 'invalid input'})
+    } else{
+        res.status(500).json({message: 'oops, thats on us'})
+    }
+})
 export default app

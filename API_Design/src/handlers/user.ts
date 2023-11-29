@@ -4,25 +4,33 @@ import { comparePasswords, hashPassword } from '../modules/auth'
 import { createJWT } from '../modules/auth'
 //handler for a route
 //handlers have a req,they have a res
-export const createNewUser = async (req,res)=>{
-    const user = await prisma.user.create({
-        //we know what the data needs to be based
-        //on schema from db
-        //anything that doesn't have a @default
-        //needs to be inside this data
-        //and the Product[] doesn't have to be added
-        //since its an empty array - alr intialized
-        data: {
-            //as the author of the server
-            //you client must send us something
-            //called username attached to the body
-            username: req.body.username,
-            // we want db to save a hashed password
-            password: await hashPassword(req.body.password)
-        }
-    })
-    const token = createJWT(user)
-    res.json({token})
+export const createNewUser = async (req,res,next)=>{
+    try {
+        const user = await prisma.user.create({
+            //we know what the data needs to be based
+            //on schema from db
+            //anything that doesn't have a @default
+            //needs to be inside this data
+            //and the Product[] doesn't have to be added
+            //since its an empty array - alr intialized
+            data: {
+                //as the author of the server
+                //you client must send us something
+                //called username attached to the body
+                username: req.body.username,
+                // we want db to save a hashed password
+                password: await hashPassword(req.body.password)
+            }
+        })
+        const token = createJWT(user)
+        res.json({token})
+        //this will then be sent to the next middleware which is on server where we specify on app.use what type of error it is
+    } catch(e) {
+        e.type = 'input'
+        next(e)
+    }
+    
+   
 }
 
 export const signin = async (req,res)=>{
